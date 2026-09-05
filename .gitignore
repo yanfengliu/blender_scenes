@@ -1,0 +1,6 @@
+.venv/
+.tools/
+.task-tmp/
+outputs/
+__pycache__/
+*.blend1
