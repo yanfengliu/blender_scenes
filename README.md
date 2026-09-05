@@ -10,6 +10,7 @@ Open `outputs/donut/strawberry_donut.blend` in Blender.
 The hero camera is already selected; press **Numpad 0** for the camera view and **F12** to render.
 The rendered images are `outputs/donut/hero.png`, `overhead.png`, and `detail.png`.
 Generated `.blend` files and renders remain local under ignored `outputs/`; the small procedural source is tracked.
+Follow the [repository retention rules](docs/policies/local-rules.md): retain reusable source, scripts, and documentation in Git, and remove completed debug/scratch artifacts after use.
 
 ## Rebuild headlessly on Windows
 
