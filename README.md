@@ -2,7 +2,7 @@
 
 ## Reference-led sailor character rebuild
 
-The usable editable draft remains `outputs/sailor_character_realism_goal/candidate-10/sailor_character.blend`, with six native inspection views. It narrows the upper frame and restores hair coverage, but the face and hair remain visibly artificial. A newly authorized repair round is active; candidate 11 is rejected for ear-height shelves and a ballooned rear hair silhouette. The complete unclothed copy is `outputs/unclothed-variant/candidate-10-reviewed/unclothed.blend`, with front, back, profile and seeded oblique renders. See the [current plan](docs/work/0_sailor-realism-goal/plan.md) for candid acceptance status and retained negative evidence.
+The usable dressed draft remains `outputs/sailor_character_realism_goal/candidate-10/sailor_character.blend`, with six native inspection views. It narrows the upper frame and restores hair coverage, but the face and hair remain visibly artificial. The requested fuller unclothed version is `outputs/unclothed-variant/anatomy-candidate-14/unclothed.blend`, with four full-body and two detail views. It adds chest volume and clearer nipple/areola and external vulvar definition. The original complete copy remains `outputs/unclothed-variant/candidate-10-reviewed/unclothed.blend`. Candidate 11's hair and candidate 12's subtle face change are rejected; their runtime changes are excluded. See the [current plan](docs/work/0_sailor-realism-goal/plan.md) for acceptance status and retained evidence.
 
 Haru is an original adult woman intended to be age 20. Frozen references and prompts remain in `outputs/sailor_character_proportions/references/`; the separately approved leaner waist and fuller bust remain intact. Photographic likeness is still incomplete: smooth pale facial skin, mottled knees, straight curtain hair and stiff fitted cloth remain visibly CG. CHR-001 stays open. The earlier proportions candidate 2, refinement candidate 10, and realism candidates 1–5 remain preserved comparison evidence.
 
@@ -30,6 +30,14 @@ Clothing, shoes and socks are separate objects. The dressed build omits covered 
 ```
 
 Choose a fresh output folder. The exporter saves `unclothed.blend`, front/back/profile and seeded oblique full-body renders, and `verification.json`. It checks preserved coordinates and visible skin attributes, complete restored topology, clothing removal, saved-file reopening and the unchanged dressed input. Both variants remain editable static meshes and curves; neither has an armature or bone-driven skinning. Open the `.blend` in Blender, use middle-mouse drag to orbit and the wheel to zoom.
+
+To reproduce the subsequently requested fuller chest and external anatomical detail, refine a complete original unclothed export into another fresh folder:
+
+```powershell
+.venv\Scripts\python.exe tools\refine_character_anatomy.py --input outputs/unclothed-variant/candidate-10-reviewed/unclothed.blend --output-dir outputs/unclothed-variant/new-anatomy
+```
+
+The procedural field in [scenes/anatomical_detail.py](scenes/anatomical_detail.py) changes the existing continuous skin surface and adds localized pigmentation. The result has 224,872 editable skin vertices after baking the existing smooth surface and refining pelvic sampling. It preserves the face, hair, pose and limbs, the original input file, and existing UV/color data outside the refined region. The runner checks actual surface response, triangle intersections, no-op/remote-head and material/smoothing negatives, then reopens the saved model and compares geometry, shading, attributes and retained objects. Four unchanged inherited pelvic-region intersection pairs are explicitly reported; no new pairs occur. Front/back/profile, seeded oblique, torso detail and pelvic detail renders use the retained studio lights. This is a static external-anatomy variant; facial/hair naturalness and full photographic realism remain incomplete.
 
 ## Rejected stylized sailor baseline
 

@@ -156,7 +156,7 @@ def export(args):
     (args.output_dir/'verification.json').write_text(json.dumps(report, indent=2)+'\n', encoding='utf-8')
 
 
-def run(args):
+def run(args, script=None, artifact_names=('unclothed.blend', 'front.png', 'back.png', 'profile.png', 'oblique.png')):
     from build_sailor_character import WindowsJob, close_owned_process
     if not args.input.is_file() or args.input.suffix.lower() != '.blend':
         raise ValueError('Input must be an existing saved .blend file.')
@@ -169,7 +169,7 @@ def run(args):
     try:
         job = WindowsJob() if os.name == 'nt' else None
         command = [args.blender, '--background', '--factory-startup', '--python-exit-code', '1',
-                   '--python', str(Path(__file__).resolve()), '--', '--inside-blender',
+                   '--python', str(Path(script or __file__).resolve()), '--', '--inside-blender',
                    '--input', str(args.input), '--output-dir', str(args.output_dir), '--base', str(args.base),
                    '--samples', str(args.samples), '--size', str(args.size)]
         with log_path.open('w', encoding='utf-8') as log:
@@ -194,8 +194,7 @@ def run(args):
             raise AssertionError('The dressed input file changed during export.')
         report = json.loads((args.output_dir/'verification.json').read_text(encoding='utf-8'))
         report['input_unchanged_sha256'] = source_hash
-        report['artifacts'] = {name: file_hash(args.output_dir/name) for name in
-                               ('unclothed.blend', 'front.png', 'back.png', 'profile.png', 'oblique.png')}
+        report['artifacts'] = {name: file_hash(args.output_dir/name) for name in artifact_names}
         (args.output_dir/'verification.json').write_text(json.dumps(report, indent=2)+'\n', encoding='utf-8')
         succeeded = True
     finally:
