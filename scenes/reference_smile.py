@@ -13,7 +13,7 @@ import heapq
 import math
 
 
-CORNER_LIFT_M = .0015
+CORNER_LIFT_M = .0010
 SUPPORT_DISTANCE_M = .018
 
 
@@ -25,7 +25,7 @@ def _smooth(value):
 def _arch(parameter):
     # Spread curvature across the mouth. A delayed quintic rise changed opposing
     # interpolated rails by 87.6 um because their actual tessellation differs.
-    # This C1 arch retains a flat central 10% and the same 1.5 mm corner lift.
+    # This C1 arch retains a flat central 10% and the configured corner lift.
     t = max(0., min(1., (parameter-.10)/.90))
     return t*t*(3.-2.*t)
 
@@ -151,7 +151,7 @@ def paired_oral_samples(before, after, sections, paths, scale):
 
 
 def apply_reference_smile(native, scale=None):
-    """Lift corners by 1.5 mm with a smooth adjacent cheek response.
+    """Lift corners by 1.0 mm with a smooth adjacent cheek response.
 
     All X coordinates remain exact. Full oral cross-sections share a vertical
     value and keep depth exact. Central lip source rows remain exact. No existing
@@ -226,8 +226,8 @@ def apply_reference_smile(native, scale=None):
         x, y, z = world[i]
         if not (abs(x) < .049 and -.160 < y < -.108 and 1.463 < z < 1.518):
             raise ValueError(f'Reference smile row {i} moved outside its declared lower-face box at {world[i]}; restore the local support.')
-    if not changed or max(math.dist(before[i], after[i])*scale for i in changed) > .001501:
-        raise ValueError('Reference smile is absent or exceeds its 1.5 mm displacement allowance; inspect support and units.')
+    if not changed or max(math.dist(before[i], after[i])*scale for i in changed) > .001001:
+        raise ValueError('Reference smile is absent or exceeds its 1.0 mm displacement allowance; inspect support and units.')
     for i in range(len(before)):
         if after[i][0] != before[i][0]:
             raise ValueError(f'Reference smile changed width at row {i}; retain all X coordinates.')

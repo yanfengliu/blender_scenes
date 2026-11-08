@@ -15,7 +15,7 @@ retained pre-layer checker; this gate does not certify optical realism.
 The current smile contract freshly evaluates the saved body against pinned
 neutral/proposed inputs, including the complete oral rails, affected surface,
 exterior aperture and controls. Neutral truth is separately compared with the
-frozen pre-smile saved body; this gate is not a likeness check.
+independent production construction with the smile disabled; this gate is not a likeness check.
 
 Run with Blender --background <saved.blend> --python-exit-code 1 --python <this.py>.
 """
@@ -34,7 +34,7 @@ from mathutils.bvhtree import BVHTree
 sys.path.insert(0,str(Path(__file__).resolve().parent))
 from verify_reference_smile import verify_reference_smile
 
-SMILE_INPUT_SHA256='c6c56c4e5d12884216403d5f604dff8290e864031ef6d9c9c6e36271027ea4df'
+SMILE_INPUT_SHA256='52d36d7c9db5b4750807bb97dec4c0270f7cc4b3aa2296407b36c00194a9ab2e'
 
 
 BODY_NAME = 'Haru / anatomical adult skin'
@@ -214,7 +214,7 @@ def check_ocular_layers(eye):
     brown = nodes.get('Natural brown iris, subdued red rim')
     require(brown is not None and brown.type == 'HUE_SAT', 'Inner eye brown correction node is missing.')
     constant(brown, 'Saturation', .62)
-    constant(brown, 'Value', .72)
+    constant(brown, 'Value', .92)
     links = {(l.from_node.name, l.from_socket.identifier, l.to_node.name, l.to_socket.identifier)
              for l in inner.node_tree.links}
     expected_links = {

@@ -20,10 +20,12 @@ from natural_hair import build_hair
 from natural_face import build_skin,shape_expression,attach_skin_regions,fit_fuller_brows,soften_iris_color
 from gentle_expression import apply_gentle_expression
 from perioral_shape import apply_perioral_shape
+from lower_cheek import apply_lower_cheek_inset
 from reference_smile import apply_reference_smile
 from verify_reference_smile import bind_reference_smile,verify_reference_smile,SmileVerificationError
 from ocular_layers import assign_ocular_layers
 from body_proportions import apply_body_proportions,full_body_support
+from upper_frame import finalize_upper_frame
 from relaxed_character_details import make_relaxed_pose,build_loafers,build_neckerchief
 
 OUT=Path(globals().get('OUTPUT_DIR',ROOT/'outputs/sailor_character_proportions'))
@@ -149,8 +151,8 @@ def uv(name,loc,scale,mat):
 
 native=load_body(DEFAULT_TARGETS+(
     ('mouth-angles-up.target',.28),('l-cheek-volume-incr.target',.14),('r-cheek-volume-incr.target',.14),
-    ('chin-width-decr.target',.10),('nose-scale-horiz-decr.target',.08),
-    ('mouth-upperlip-volume-incr.target',.30),('l-eye-height2-incr.target',.035),('r-eye-height2-incr.target',.035)))
+    ('chin-width-decr.target',.10),('nose-scale-horiz-decr.target',.30),
+    ('mouth-upperlip-volume-incr.target',.18),('l-eye-height2-incr.target',.60),('r-eye-height2-incr.target',.60)))
 for v in native['vertices']:
     # Match the reference's shorter lower face while keeping a full adult skull.
     if 4.65<v[1]<5.8:
@@ -161,6 +163,7 @@ for v in native['vertices']:
 # original vertex indices, so the eyes/brows/lashes fit the same shaped anatomy.
 mouth_y=shape_expression(native)
 expression_diagnostics=apply_gentle_expression(native)
+cheek_diagnostics=apply_lower_cheek_inset(native)
 # Preserve the retained skin coordinates independently of the later anatomical
 # edit. The body field and pose apply to both sets; culling keeps its own input.
 skin_reference_native={**native,'vertices':[v[:] for v in native['vertices']]}
@@ -233,7 +236,7 @@ for face,uvface in zip(native['faces'],native['face_uvs']):
     if not (covered_torso or covered_sleeve or covered_sock):visible_faces.append(face);visible_uvs.append(uvface)
 body=mesh('Haru / anatomical adult skin',posed,visible_faces,skin,2,native['uvs'],visible_uvs)
 smile_input_sha=bind_reference_smile(body,smile_diagnostics,lambda co:pose(to_blender([co],native['ground_y'],SCALE)[0]))
-assert smile_input_sha=='c6c56c4e5d12884216403d5f604dff8290e864031ef6d9c9c6e36271027ea4df', 'Reference smile input differs from the reviewed candidate4-neutral contract.'
+assert smile_input_sha=='52d36d7c9db5b4750807bb97dec4c0270f7cc4b3aa2296407b36c00194a9ab2e', 'Reference smile input differs from the independently checked refined-face neutral contract.'
 body['character_age']=20;body['reference']='references/character-reference.png'
 attach_skin_regions(body,skin_reference_posed)
 # Keep the editable reference mapping for comparison, but do not mix its baked
@@ -395,6 +398,8 @@ for s in (-1,1):
 build_loafers(native,SCALE,pose,cols['04 Sailor clothing'],{'leather':shoe_mat,'sole':sole_mat})
 
 hair_objects=build_hair(native,SCALE,cols['03 Strand hair'],body_object=body)
+upper_frame_diagnostics=finalize_upper_frame([body,*cols['04 Sailor clothing'].all_objects])
+print({'upper_frame':upper_frame_diagnostics},flush=True)
 
 group=cols['05 Studio']
 # A round photographic sweep gives every inspection camera a seamless backdrop.

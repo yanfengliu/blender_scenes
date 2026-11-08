@@ -7,6 +7,7 @@ The fixed hero, portrait, profile and rear renders determine visual acceptance.
 """
 import math
 import random
+from hair_groom import add_strand, comb_fraction, coverage_fraction, crown_coverage, fall_shape, fringe_coverage, fringe_tip_height, temple_coverage
 
 
 def _mix(a, b, t):
@@ -125,26 +126,39 @@ class _Head:
         return root
 
     def clear_whole_guide(self, guide):
-        """A single smooth radial offset per guide, never a pointwise clipping field."""
-        needed = 0.0
-        for x, y, z in guide:
+        """One broad local lift; an ear contact must not inflate the whole crown."""
+        arc=[0.0]
+        for a,b in zip(guide,guide[1:]):arc.append(arc[-1]+math.dist(a,b))
+        needed=[]
+        for s,(x, y, z) in zip(arc,guide):
             if self.jaw - 0.015 <= z <= self.top:
                 dx, dy = x-self.cx, y-self.cy
                 radius = math.hypot(dx, dy)
                 if radius > 0.003:
                     surface = self.radial_skin(dx, dy, z)
+                    if z<self.eye+.055:
+                        angle=math.atan2(dy,dx)
+                        nearby=[self.radial_skin(math.cos(angle+da),math.sin(angle+da),z+dz)
+                                for da in (-.025,0,.025) for dz in (-.005,0,.005)]
+                        nearby=[r for r in nearby if r is not None]
+                        if nearby:surface=max(nearby)
                     if surface is not None:
-                        needed = max(needed, surface + 0.0025 - radius)
-        if needed <= 0:
-            return guide
-        self.max_guide_lift = max(self.max_guide_lift, needed)
+                        if surface+.0025>radius:needed.append((s,surface+.0025-radius))
+        if not needed:return guide
+        centre=(needed[0][0]+needed[-1][0])/2
+        width=max(.080,(needed[-1][0]-needed[0][0])/2+.060)
+        def kernel(s):
+            u=abs(s-centre)/width
+            return (1-u*u)**3 if u<1 else 0.0
+        amplitude=max(lift/kernel(s) for s,lift in needed)
+        self.max_guide_lift = max(self.max_guide_lift, amplitude)
         result = []
-        for x, y, z in guide:
+        for s,(x, y, z) in zip(arc,guide):
             dx, dy = x-self.cx, y-self.cy
             radius = math.hypot(dx, dy)
             if radius > 0.003:
-                x += needed * dx/radius
-                y += needed * dy/radius
+                x += amplitude*kernel(s) * dx/radius
+                y += amplitude*kernel(s) * dy/radius
             result.append((x,y,z))
         return result
 
@@ -216,12 +230,7 @@ def _transport_angle(parameter, amount):
     """
     enter=_smooth((parameter+.45)/.25)
     leave=1-_smooth((parameter-.20)/(math.pi/2-.20))
-    return parameter+.08*amount*enter*leave
-
-
-def _ear_sweep(z,head):
-    # A small one-way drift avoids the rejected shared outward/return S-bend.
-    return _smooth((head.eye+.035-z)/.160)
+    return parameter+.12*amount*enter*leave
 
 
 def _scalp_arc(head, root_direction, end_direction, phase, count=40, parameter=0, side=1):
@@ -236,10 +245,13 @@ def _scalp_arc(head, root_direction, end_direction, phase, count=40, parameter=0
         # A modest comb bend makes outer forehead strands sweep diagonally
         # before their eye-line tips. Roots/endpoints remain unchanged.
         front=1-_smooth((parameter+.70)/.50)
-        bend=.15*front*max(0.0,math.cos(parameter))*math.sin(math.pi*t)**2
-        horizontal=math.hypot(direction[0],direction[1])
-        angle=math.atan2(direction[1],abs(direction[0]))+bend
-        direction=(side*horizontal*math.cos(angle),horizontal*math.sin(angle),direction[2])
+        bend=(.23+.025*side)*front*max(0.0,math.cos(parameter))*math.sin(math.pi*t)**2
+        # Rotate the signed vector rather than reflecting each half away from
+        # the midline: both central guides must share the same scalp corridor.
+        angle=side*bend
+        dx,dy,dz=direction
+        direction=(dx*math.cos(angle)-dy*math.sin(angle),
+                   dx*math.sin(angle)+dy*math.cos(angle),dz)
         # The child lock field supplies depth; guides no longer define a thick
         # outer blanket that every strand follows with almost the same tangent.
         loft = .0028 + .0016 * math.sin(math.pi*t)**2
@@ -259,10 +271,14 @@ def _guide(head, side, parameter):
     root_angle = .12 + .40 * parameter / (math.pi/2)
     root_direction = (0.0, math.sin(root_angle), math.cos(root_angle))
     ux, uy = side * math.cos(parameter), math.sin(parameter)
+    # A common mild side-sweep joins the two central populations; independent
+    # outward root offsets had opened candidate7's straight scalp cleft.
+    turn=.23*(1-_smooth((parameter+.75)/.40))
+    ux,uy=ux*math.cos(turn)-uy*math.sin(turn),ux*math.sin(turn)+uy*math.cos(turn)
     long_weight = _smooth((parameter + .84)/.32)
     frontal = None
     if long_weight < 1.0:
-        target_z = head.eye + .010 + .008 * math.sin(phase*2.2)**2
+        target_z = head.eye + fringe_tip_height(parameter,side)
         # Solve against the actual forehead, including the strand's loft.
         # The lower bound remains above the eye line for every frontal guide.
         lo, hi = -.10, .38
@@ -277,52 +293,25 @@ def _guide(head, side, parameter):
         frontal = _sample_curve(_scalp_arc(head,root_direction,end_direction,phase,55,parameter,side),110)
         if long_weight == 0.0:
             return head.clear_whole_guide(frontal)
-    elevation = .30 + .065 * math.sin(phase)
+    elevation,station_shift,tip_offset = fall_shape(parameter,side)
     end_direction = (ux * math.cos(elevation), uy * math.cos(elevation), math.sin(elevation))
     scalp = _scalp_arc(head,root_direction,end_direction,phase,25,parameter,side)
     p = scalp[-1]
     dx,dy = p[0]-head.cx,p[1]-head.cy
     length = math.hypot(dx,dy)
-    # Ordered anatomical stations replace the single maximum-radius column:
-    # brow, rear of helix, cheek/jaw, then a modest inward shoulder-length tip.
-    shoulder_z=head.top-.296+.004*math.sin(phase*1.7)
-    stations=[p]
-    levels=((min(p[2]-.008,head.eye+.018),.001),
-            (head.eye-.015,.001),
-            (head.jaw+.032,.001),
-            (head.jaw-.014,.000),
-            (shoulder_z+.022,-.005),
-            (shoulder_z,-.012))
-    for z,offset in levels:
-        angle=_transport_angle(parameter,_ear_sweep(z,head))
-        ux,uy=side*math.cos(angle),math.sin(angle)
-        radius=length+offset
-        # Local outermost-surface support includes the actual ear and a small
-        # angular/height neighbourhood. Its radius is not carried to the tips.
-        if z>head.jaw-.025:
-            surfaces=[head.radial_skin(side*math.cos(angle+da),math.sin(angle+da),z+dz)
-                      for da in (-.025,0,.025) for dz in (-.005,0,.005)]
-            surfaces=[r for r in surfaces if r is not None]
-            if surfaces: radius=max(radius,max(surfaces)+.0025)
-        stations.append((head.cx+ux*radius,head.cy+uy*radius,z))
-    tangents=[]
-    for i,station in enumerate(stations):
-        if i==0:
-            direction=_unit(tuple(p[k]-scalp[-3][k] for k in range(3)))
-            span=math.dist(stations[0],stations[1])
-        elif i==len(stations)-1:
-            direction=_unit(tuple(station[k]-stations[i-1][k] for k in range(3)))
-            span=math.dist(station,stations[i-1])
-        else:
-            direction=_unit(tuple(stations[i+1][k]-stations[i-1][k] for k in range(3)))
-            span=.5*(math.dist(station,stations[i-1])+math.dist(station,stations[i+1]))
-        tangents.append(tuple(direction[k]*span for k in range(3)))
+    # One tangent-matched cubic supplies the entire free fall. Shared brow/ear
+    # stations previously left a horizontal ridge even with unequal heights.
+    frame=1-_smooth((parameter+.45)/.85)
+    shoulder_z=head.top-.302-.008*frame+tip_offset
+    angle=_transport_angle(parameter,1.)
+    ux,uy=side*math.cos(angle),math.sin(angle)
+    radius=max(.045,length-.010-.25*tip_offset)
+    tip=(head.cx+ux*radius,head.cy+uy*radius,shoulder_z)
+    tangent=_unit(tuple(p[k]-scalp[-3][k] for k in range(3)))
+    c1=tuple(p[k]+(.035+station_shift*.4)*tangent[k] for k in range(3))
+    c2=(tip[0]+ux*.014,tip[1]+uy*.014,tip[2]+.070+station_shift)
     controls=scalp[:]
-    for i in range(len(stations)-1):
-        a,b=stations[i:i+2]
-        c1=tuple(a[k]+tangents[i][k]/3 for k in range(3))
-        c2=tuple(b[k]-tangents[i+1][k]/3 for k in range(3))
-        controls.extend(_bezier(a,c1,c2,b,j/10) for j in range(1,11))
+    controls.extend(_bezier(p,c1,c2,tip,j/50) for j in range(1,51))
     long_path = _sample_curve(controls,110)
     if frontal is not None:
         long_path = [_mix(a,b,long_weight) for a,b in zip(frontal,long_path)]
@@ -330,20 +319,8 @@ def _guide(head, side, parameter):
 
 
 def _coverage(sample):
-    """Invert a strictly positive continuous density, without guide attraction.
-
-    Stratified samples cover the full angular domain. The frontal density is
-    lighter but never zero; the side/rear density remains continuous and full.
-    """
-    def mass(x):
-        u=max(0.0,min(1.0,(x-.16)/.19))
-        return .28*x+.72*(.19*(u**3-.5*u**4)+max(0.0,x-.35))
-    target=sample*mass(1.0);lo,hi=0.0,1.0
-    for _ in range(24):
-        mid=(lo+hi)/2
-        if mass(mid)<target: lo=mid
-        else: hi=mid
-    return (lo+hi)/2
+    """Redistribute the existing population toward the visibly sparse fringe."""
+    return coverage_fraction(sample)
 
 
 def _field_point(bank, guide, position):
@@ -359,13 +336,14 @@ def _field_point(bank, guide, position):
 def _child(bank, sample, rng, head, flyaway=False):
     fraction=_coverage(sample)
     f=fraction*(len(bank)-1)
+    side=-1 if bank[len(bank)//2][-1][0]<head.cx else 1
     # Independent departures stay below 0.004 radians (about 0.4 mm at the
     # head), and vanish at the front/rear boundaries. No bin loses its density
     # to a shared attractor, which produced the rejected bars and scalp gaps.
     departure=rng.uniform(-.11,.11)*math.sin(math.pi*fraction)
     departure_mid=rng.uniform(-.07,.07)*math.sin(math.pi*fraction)
     # Roots occur throughout the upper scalp arc, not at one atlas extremum.
-    start = rng.randrange(0,5+int(15*_smooth((fraction-.20)/.17)))
+    start = rng.randrange(0,8+int(12*_smooth((fraction-.20)/.17)))
     phase = rng.uniform(0,math.tau)
     # Roots cover a surface. Independent depth keeps a dense inner population
     # while fewer strands cross the outer layer and break its sheen.
@@ -376,16 +354,17 @@ def _child(bank, sample, rng, head, flyaway=False):
         layer += rng.uniform(0.0008,0.0020)
         wave += rng.uniform(0.0003,0.0007)
     fringe = _field_point(bank,f,len(bank[0])-1)[2] > head.eye+.004
-    end_delta = (rng.uniform(-.0015,.006) if fringe else rng.uniform(-.006,.008))
+    end_delta = (rng.triangular(-.002,.008,.001) if fringe else rng.uniform(-.007,.014))
     depth=rng.uniform(.0003,.0018)
     if not fringe and fraction < .48:
         end_delta += .004
     points=[]
     for i in range(64):
         t=i/63
-        moving_guide=f+departure*_smooth((t-.10)/.80)+departure_mid*math.sin(math.pi*t)**2
-        if fringe:
-            moving_guide = min(moving_guide,(math.pi/2-.84)/math.pi*(len(bank)-1))
+        moving_guide=comb_fraction(fraction,t,side)*(len(bank)-1)
+        moving_guide+=departure*_smooth((t-.10)/.80)+departure_mid*math.sin(math.pi*t)**2
+        # Preserve every blended fringe-to-temple guide interval. Clamping that
+        # sector to the last short guide opened candidate9's straight skin wedge.
         position = start+(len(bank[0])-1-start)*t
         x,y,z = _field_point(bank,moving_guide,position)
         dx,dy=x-head.cx,y-head.cy
@@ -412,8 +391,8 @@ def _child(bank, sample, rng, head, flyaway=False):
 def build_hair(native_data, scale, collection, body_object=None):
     """Create 23,000 editable fine strands on smooth anatomical guide families."""
     import bpy
-    # Only the material/filament writer is reused; no UV bank or old fitting field.
-    from fitted_hair import _materials, _add_strand
+    # Only material construction is reused; the groom retains its own shaft profile.
+    from fitted_hair import _materials
     head=_Head(bpy,native_data,scale,body_object)
     banks=[]
     for side in (-1,1):
@@ -440,7 +419,7 @@ def build_hair(native_data, scale, collection, body_object=None):
         for mat in mats:data.materials.append(mat)
         obj=bpy.data.objects.new(name,data)
         collection.objects.link(obj)
-        obj['construction']='Measured scalp roots; stratified continuous angular coverage; small independent child departures and depth'
+        obj['construction']='Measured scalp roots; dense brow-reaching fringe; continuous ordered lock flow and layered inward ends'
         obj['source']='CC0 MakeHuman anatomical base and adult targets; no rendered external hair asset'
         obj['strand_count']=count
         obj['seed']=9020537
@@ -453,7 +432,7 @@ def build_hair(native_data, scale, collection, body_object=None):
             for p in path:
                 for axis in range(3):
                     low[axis]=min(low[axis],p[axis]);high[axis]=max(high[axis],p[axis])
-            _add_strand(data,path,rng,fringe)
+            add_strand(data,path,rng,fringe)
         objects.append(obj)
     for obj in objects:
         obj['bounds_min_m']=low
@@ -463,9 +442,21 @@ def build_hair(native_data, scale, collection, body_object=None):
         obj['maximum_measured_root_distance_m']=head.max_root_distance
         obj['interpolated_strands_corrected']=head.corrected_strands
         obj['maximum_local_strand_lift_m']=head.max_strand_lift
+    coverage=fringe_coverage(objects,head.eye,head.cy)
+    if not coverage['pass']:
+        raise ValueError(f"Actual fringe failed its geometric coverage/taper guard: {coverage}")
+    crown=crown_coverage(objects,head)
+    if not crown['pass']:
+        raise ValueError(f"Actual crown has an exposed cleft in the measured front window: {crown}")
+    temple=temple_coverage(objects,head)
+    if not temple['pass']:
+        raise ValueError(f"Actual fringe-to-temple sector has an exposed angular gap: {temple}")
     print({'natural_hair_strands':23000,'guide_count':192,'bounds_min_m':low,
            'bounds_max_m':high,'largest_whole_guide_clearance_offset_m':head.max_guide_lift,
            'measured_root_count':head.measured_roots,'maximum_measured_root_distance_m':head.max_root_distance,
            'interpolated_strands_corrected':head.corrected_strands,'maximum_local_strand_lift_m':head.max_strand_lift,
+           'fringe_coverage':coverage,
+           'crown_coverage':crown,
+           'temple_coverage':temple,
            'verification':'Independent true-intersection test and four-view visual review are required.'})
     return objects

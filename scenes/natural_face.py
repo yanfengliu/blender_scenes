@@ -129,7 +129,7 @@ def build_skin(path):
     # Photographic lip color remains textured. Its anatomical mask previously
     # affected only roughness, leaving the lower lip almost the cheek color.
     lips = nodes.new('ShaderNodeMixRGB'); lips.name = 'Muted rose vermilion / preserve photographic detail'
-    lips.blend_type = 'MULTIPLY'; lips.inputs[2].default_value = (.82, .55, .62, 1)
+    lips.blend_type = 'MULTIPLY'; lips.inputs[2].default_value = (.92, .76, .79, 1)
     links.new(separate.outputs['Green'], lips.inputs[0]); links.new(flush.outputs[0], lips.inputs[1])
     links.new(lips.outputs[0], shader.inputs['Base Color'])
     coord = nodes.new('ShaderNodeTexCoord')
@@ -149,15 +149,15 @@ def build_skin(path):
 
     # Oil regions and centimeter-scale roughness are independent of pores. The
     # old graph drove bump and roughness with the same uniform high-frequency noise.
-    oil_rough = remap(separate.outputs['Red'], .45, .27, 'Cheek-to-T-zone roughness')
+    oil_rough = remap(separate.outputs['Red'], .44, .32, 'Cheek-to-T-zone roughness')
     macro = noise('Broad uneven surface oils / 26 mm', 38, 2.5)
     modulation = remap(macro.outputs['Fac'], -.02, .02, 'Local roughness variation')
     add = nodes.new('ShaderNodeMath'); add.operation = 'ADD'
     links.new(oil_rough, add.inputs[0]); links.new(modulation, add.inputs[1])
-    lip_rough = nodes.new('ShaderNodeMixRGB'); lip_rough.inputs[2].default_value = (.25, .25, .25, 1)
+    lip_rough = nodes.new('ShaderNodeMixRGB'); lip_rough.inputs[2].default_value = (.30, .30, .30, 1)
     links.new(separate.outputs['Green'], lip_rough.inputs[0]); links.new(add.outputs[0], lip_rough.inputs[1])
     links.new(lip_rough.outputs[0], shader.inputs['Roughness'])
-    specular = remap(separate.outputs['Red'], .5, .5, 'Local specular oil response')
+    specular = remap(separate.outputs['Red'], .40, .40, 'Local specular oil response')
     links.new(specular, shader.inputs['Specular IOR Level'])
     pores = noise('Visible skin pores / 0.42 mm', 2400, 2.3)
     pore_bump = nodes.new('ShaderNodeBump'); pore_bump.name = 'Small pore relief'
@@ -212,7 +212,7 @@ def soften_iris_color(material):
     mask.inputs['To Min'].default_value = 1; mask.inputs['To Max'].default_value = 0
     links.new(nearest.outputs[0], mask.inputs['Value'])
     brown = nodes.new('ShaderNodeHueSaturation'); brown.name = 'Natural brown iris, subdued red rim'
-    brown.inputs['Saturation'].default_value = .62; brown.inputs['Value'].default_value = .72
+    brown.inputs['Saturation'].default_value = .62; brown.inputs['Value'].default_value = .92
     links.new(image.outputs['Color'], brown.inputs['Color'])
     mix = nodes.new('ShaderNodeMixRGB')
     links.new(mask.outputs['Result'], mix.inputs[0]); links.new(image.outputs['Color'], mix.inputs[1]); links.new(brown.outputs['Color'], mix.inputs[2])

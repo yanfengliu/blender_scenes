@@ -57,7 +57,7 @@ def bind_reference_smile(body,report,transform_native_point):
     require(INPUT_PROPERTY not in body,'Reference smile input is already bound; inspect its provenance instead of replacing it.')
     require(report.get('required_evaluated_gate')=='evaluated_exterior_aperture','Reference smile source report lacks its required live gate.')
     rows=report['changed_rows']
-    require(rows==sorted(set(rows)) and len(rows)==522,'Reference smile needs the frozen522 changed native rows.')
+    require(rows==sorted(set(rows)) and len(rows)==516,'Reference smile needs the revised516 changed native rows.')
     before=report['native_before_changed'];after=report['native_after_changed']
     require([r[0] for r in before]==rows==[r[0] for r in after],'Reference smile neutral/proposed row identities differ.')
     require(len(body.data.vertices)==19158 and body.matrix_world==Matrix.Identity(4),'Reference smile requires retained19158-row body and identity object transform.')
@@ -744,7 +744,7 @@ class _Run:
         self.paths=c['oral_paths'];self.corner_sections=c['corner_sections']
         self.contact=tuple(i for pair in self.sections for i in pair)
         require(len(self.contact)==len(set(self.contact))==76 and len(self.sections)==38,'Reference smile complete oral strip is missing.')
-        require(self.changed_rows==sorted(set(self.changed_rows)) and len(self.changed_rows)==522,'Reference smile changed-row contract differs from the approved field.')
+        require(self.changed_rows==sorted(set(self.changed_rows)) and len(self.changed_rows)==516,'Reference smile changed-row contract differs from the revised field.')
         require([r['row'] for r in c['coordinates']]==self.changed_rows,'Missing/duplicate reference smile coordinate input.')
         self.neutral=[p.copy() for p in self.proposed]
         for row in c['coordinates']:

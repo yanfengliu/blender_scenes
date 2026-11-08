@@ -2,7 +2,7 @@
 
 Harness: prepare_human_base and the current main's native-expression block
 provide the inspected hm08 mesh for pure checks. Only the licensed upper-lip
-target support and oral-rim adjacency may move. Source checks do not certify
+target support, oral-rim adjacency and bounded lower vermilion may move. Source checks do not certify
 evaluated lip contact, proxy fitting or likeness; native oblique/profile review
 remains required before retaining an integrated candidate.
 """
@@ -30,9 +30,10 @@ def _triangle_normal(vertices, triangle):
 
 
 def apply_perioral_shape(native, scale=None):
-    """Retract the upper vermilion crest by 2 mm and widen contact by 8%.
+    """Soften upper/lower vermilion contours and widen contact by 2%.
 
-    Native X is lateral, Y vertical and Z forward. The target is used only as
+    Upper crest retracts 2 mm and lowers 1.2 mm; lower crest lifts 0.8 mm
+    and retracts 0.4 mm. Native X is lateral, Y vertical and Z forward. The target is used only as
     anatomical support; no target volume is reapplied. Contact Y/Z and every
     vertex beyond the sparse support stay exact. Contact X uses one shared
     linear map for upper/lower rows, fading over 12 mm of actual face adjacency.
@@ -87,7 +88,7 @@ def apply_perioral_shape(native, scale=None):
     for i,length in distance.items():
         weight = 1.0-_smooth(length/.012)
         if weight:
-            after[i][0] = before[i][0]*(1.0+.08*weight)
+            after[i][0] = before[i][0]*(1.0+.02*weight)
             width_rows.add(i)
 
     # The positive-forward target support identifies the actual upper vermilion.
@@ -106,6 +107,7 @@ def apply_perioral_shape(native, scale=None):
         weight *= _smooth((before[i][2]-contact_depth)/crest_span)
         if weight:
             after[i][2] -= .002*weight/scale
+            after[i][1] -= .0012*weight/scale
             retracted.add(i)
 
     changed = {i for i,(a,b) in enumerate(zip(before,after)) if a != tuple(b)}
@@ -144,9 +146,12 @@ def apply_perioral_shape(native, scale=None):
             minimum_normal_dot = min(minimum_normal_dot,cosine)
             triangle_count += 1
     for i in changed:vertices[i][:] = after[i]
-    return {'changed_vertices':len(changed),'retracted_target_rows':len(retracted),
+    lower = _thin_lower_lip(native, scale)
+    return {'lower_lip':lower,
+            'counts_scope':'Top-level counts and bounds describe the upper-lip/width stage; lower_lip describes the subsequent lower contour. tools/check_lip_contour.py verifies combined geometry.',
+            'changed_vertices':len(changed),'retracted_target_rows':len(retracted),
             'widened_rows':len(width_rows),'target_rows':len(target),'contact_rows':len(contact),
-            'contact_width_ratio':1.08,'contact_yz_exact':True,
+            'contact_width_ratio':1.02,'contact_yz_exact':True,
             'crest_forward_span_before_m':crest_span*scale,
             'crest_forward_span_after_m':(after[466][2]-after[520][2])*scale,
             'maximum_displacement_m':maximum,'affected_source_triangles':triangle_count,
@@ -154,3 +159,90 @@ def apply_perioral_shape(native, scale=None):
             'minimum_source_triangle_normal_dot':minimum_normal_dot,
             'unchanged_outside_support_vertices':len(pinned),
             'bound':'Native hm08 body triangle fans and sparse target/contact adjacency only. Contact Y/Z and all rows outside support are exact; common linear X mapping preserves paired contacts. Does not certify subdivided lip contact, self-intersections, photographic proportions or likeness; fixed native portrait/profile/oblique review is still required.'}
+
+
+def _interval_smooth(low, high, value):
+    return _smooth((value-low)/(high-low))
+
+
+def _thin_lower_lip(native, scale):
+    """Lift lower vermilion <=0.8 mm, retract <=0.4 mm; preserve every oral row."""
+    from reference_smile import trace_oral_strip
+
+    before = [tuple(v) for v in native['vertices']]
+    sections, _ = trace_oral_strip(native['faces'])
+    oral = {i for pair in sections for i in pair}
+    body = set(native['groups']['body'])
+    protected = set(range(len(before)))-body
+    for name, rows in native['groups'].items():
+        if name != 'body':
+            protected.update(rows)
+    protected.update(oral)
+    # Full lower rail goes left corner -> lower center -> right corner.
+    # A shared physical contact envelope includes both outer and inner rows.
+    knots = []
+    for a, b in sections[12:27]:
+        knots.append(((before[a][0]+before[b][0])*.5*scale,
+                      (before[a][1]+before[b][1])*.5*scale,
+                      max(before[a][2], before[b][2])*scale))
+    assert all(a[0] < b[0] for a,b in zip(knots,knots[1:]))
+
+    def field(point):
+        x,y,z = (c*scale for c in point)
+        if not knots[0][0] < x < knots[-1][0]:
+            return 0.
+        for a,b in zip(knots,knots[1:]):
+            if a[0] <= x <= b[0]:
+                t = _interval_smooth(a[0],b[0],x)
+                contact_y = a[1]+t*(b[1]-a[1])
+                contact_z = a[2]+t*(b[2]-a[2])
+                break
+        below = contact_y-y
+        front = z-contact_z
+        return ((1.-_interval_smooth(.014,.022,abs(x))) * _interval_smooth(.0015,.004,below)
+                * (1.-_interval_smooth(.009,.014,below)) * _interval_smooth(.0005,.0018,front)
+                * _interval_smooth(.140,.143,z) * _interval_smooth(.563,.566,y) * (1.-_interval_smooth(.580,.582,y)))
+
+    # Pinning is not used to conceal a discontinuous nonzero oral field.
+    oral_raw_max = max(field(before[i]) for i in oral)
+    assert oral_raw_max == 0., oral_raw_max
+    after = [list(v) for v in before]
+    for i in body-protected:
+        weight = field(before[i])
+        after[i][1] += .0008*weight/scale
+        after[i][2] -= .0004*weight/scale
+    changed = {i for i in body if tuple(after[i]) != before[i]}
+    assert changed and not changed & protected
+    assert all(tuple(after[i]) == before[i] for i in oral)
+    assert all(after[i][0] == before[i][0] for i in range(len(before)))
+    for i in changed:
+        # Anatomical support remains a lower-lip-only box in absolute native metres.
+        x,y,z = (c*scale for c in before[i])
+        assert abs(x)<.022 and .563 < y < .582 and .140 < z < .150, (i,x,y,z)
+    ratios, dots, edges = [], [], set()
+    for face in native['faces']:
+        if not changed.intersection(face):
+            continue
+        for j in range(1,len(face)-1):
+            tri=(face[0],face[j],face[j+1])
+            a,b = _triangle_normal(before,tri),_triangle_normal(after,tri)
+            la,lb = math.sqrt(sum(v*v for v in a)),math.sqrt(sum(v*v for v in b))
+            assert la>1e-12 and lb>1e-12
+            ratio=lb/la;dot=sum(x*y for x,y in zip(a,b))/(la*lb)
+            assert ratio>=.25 and dot>0, (tri,ratio,dot)
+            ratios.append(ratio);dots.append(dot)
+            for u,v in zip(tri,tri[1:]+tri[:1]):edges.add(tuple(sorted((u,v))))
+    gradients=[]
+    for i,j in edges:
+        di=[after[i][a]-before[i][a] for a in range(3)]
+        dj=[after[j][a]-before[j][a] for a in range(3)]
+        gradients.append((math.dist(di,dj)/math.dist(before[i],before[j]), i,j,math.dist(di,dj)*scale))
+    maximum_gradient=max(gradients)
+    assert maximum_gradient[0] < .5, maximum_gradient
+    for i in changed:native['vertices'][i][:]=after[i]
+    return dict(changed_vertices=len(changed),full_oral_rows_exact=len(oral),all_x_exact=True,
+                raw_oral_field_max=oral_raw_max,protected_rows_exact=len(protected),
+                max_displacement_mm=max(math.dist(before[i],after[i])*scale*1000 for i in changed),
+                affected_triangles=len(ratios),minimum_area_ratio=min(ratios),minimum_normal_dot=min(dots),
+                max_edge_displacement_gradient=maximum_gradient,
+                crest495_delta_mm=[(after[495][a]-before[495][a])*scale*1000 for a in range(3)])

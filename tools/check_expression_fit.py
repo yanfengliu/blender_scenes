@@ -40,12 +40,13 @@ def production_blocks(source):
                    and isinstance(n.value.func, ast.Name) and n.value.func.id == 'build_collar', 'build_collar call')
     first_material = index(lambda n: assignment(n, 'ivory'), 'ivory material')
     last_material = index(lambda n: assignment(n, 'cols'), 'collection initialization')
-    require(first_material < last_material < start < stop < cloth < collar, 'Production AST blocks changed order.')
+    finish = index(lambda n: assignment(n, 'upper_frame_diagnostics'), 'final upper-frame stage')
+    require(first_material < last_material < start < stop < cloth < collar < finish, 'Production AST blocks changed order.')
     helpers = [n for n in nodes if isinstance(n, ast.FunctionDef) and n.name in ('srgb', 'material')]
     require(len(helpers) == 2, 'Production srgb/material helper definitions are missing or duplicated.')
     blocks = {'imports': [n for n in nodes[:start] if isinstance(n, (ast.Import, ast.ImportFrom))],
               'materials': helpers+nodes[first_material:last_material],
-              'anatomy': nodes[start:stop], 'clothing': nodes[cloth:collar+1]}
+              'anatomy': nodes[start:stop], 'clothing': nodes[cloth:collar+1], 'finish': [nodes[finish]]}
     return {name: compile(ast.Module(body=items, type_ignores=[]), str(source), 'exec')
             for name, items in blocks.items()}
 
@@ -98,9 +99,14 @@ def run_case(name, source, blocks):
     scope['cols'] = {'04 Sailor clothing': collection}
     exec(blocks['anatomy'], scope)
     exec(blocks['clothing'], scope)
+    skin = bpy.data.meshes.new('Expression regression actual body')
+    skin.from_pydata(scope['posed'], [], scope['visible_faces'])
+    scope['body'] = bpy.data.objects.new(skin.name, skin)
+    bpy.context.scene.collection.objects.link(scope['body'])
+    exec(blocks['finish'], scope)
     bpy.context.view_layer.update()
     native = [tuple(v) for v in scope['native']['vertices']]
-    posed = [tuple(v) for v in scope['posed']]
+    posed = [tuple(v.co) for v in scope['body'].data.vertices]
     require(len(native) == len(posed) == 19158, 'Actual body source population changed.')
     return {'garments': {n: garment_snapshot(bpy.data.objects[n]) for n in GARMENTS},
             'native': native, 'posed': posed, 'controls': controls, 'body_rows': scope['native']['groups']['body']}
