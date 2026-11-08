@@ -1,0 +1,15 @@
+# Candidate 5 garment isolation repair
+
+**Timestamp:** 2026-11-07, resumed repair and review during the local afternoon session.
+
+**Action:** Reproduced the remote-expression BVH tie, added independent pre-smile garment anatomy, and built candidate 6 once. Adopted the previously local character dependencies into the delivery branch while preserving unrelated donut/chili work and historical rejected candidates.
+
+**Result:** Candidate 6 garments exactly equal candidate 4; its body exactly equals candidate 5. All 114 captured nonbody objects remain unchanged. Complete saved-body verification reports zero garment/body overlaps, minimum blouse gap 0.574623 mm and collar gap 3.356572 mm. The four-case production regression preserves garments for actual facial changes and responds to torso changes. Six of ten integrated attempts are used.
+
+**Reasoning:** A different equal-distance triangle normal moved three blouse controls and propagated into the collar despite unchanged local support coordinates. A separate post-perioral, pre-smile fitting input retains the accepted BVH query results; changing the tie-break policy would instead introduce a new garment shape. Final clearance is measured against the actual smiled anatomy, without a correcting solver.
+
+**Validation:** Root and independent review inspected six native-resolution renders against frozen earlier candidates and both references. Canonical, strict saved isolation, historical drift rejection, actual-body intrusion and production expression controls pass. The diagnostic needed to recreate an unused braid input dropped by Blender on save and update the dependency graph before reading rebuilt dimensions; these instrument repairs did not change or save a candidate. Fleet tests were rerun outside the sandbox after MSYS initialization failures: 548/557 pass, with nine unrelated census/Windows work-document failures. Canon sync exits 0 with the uncensused-repository warning; work-doc structure and the official Blender Lab MCP donut build/render gate pass. All three donut renders were inspected at native resolution. The failing fleet gate prevents commit/push under AGENTS.md; the reviewed repair remains recoverable in its isolated worktree.
+
+**Code reviewer comments:** Independent review caught that body crease attributes could invalidate a reconstructed Subsurf surface and scene-unit scale could invalidate metre claims. Both now fail closed. The reviewer accepted the bounded scene change and the local visual result; overall reference likeness remains unaccepted.
+
+**Delivery follow-up (2026-11-07):** The owner approved a one-time delivery exception, then asked to address the repeated fleet failures. The shared gate was repaired before delivery: two repositories onboarded, Windows Unicode/junction fixture cleanup corrected, six class regressions added, and all 563 tests now pass without skips. Both dependency audits are clean and all 35 canon copies are current. The exception is no longer needed; the reviewed Blender source and native visual result are unchanged.

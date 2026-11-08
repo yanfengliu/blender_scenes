@@ -1,5 +1,45 @@
 # Blender scenes
 
+## Reference-led sailor character rebuild
+
+The current retained model is `outputs/sailor_character_realism_goal/candidate-6/sailor_character.blend`, with `hero.png`, `portrait.png`, `profile.png`, `back.png`, `face_oblique.png`, and `torso_random.png` beside it. Candidate 6 preserves candidate 5's smile and restores candidate 4's exact blouse and collar. Root and independent six-view review accept this local repair. Six of ten integrated attempts are used; the [current plan](docs/work/0_sailor-realism-goal/plan.md) records acceptance, evidence and remaining work.
+
+Haru is an original adult woman intended to be age 20. Frozen references and prompts remain in `outputs/sailor_character_proportions/references/`; the separately approved leaner waist and fuller bust remain intact. Photographic likeness is still incomplete: smooth pale facial skin, mottled knees, straight curtain hair and stiff fitted cloth remain visibly CG. CHR-001 stays open. The earlier proportions candidate 2, refinement candidate 10, and realism candidates 1–5 remain preserved comparison evidence.
+
+[scenes/sailor_character_realistic.py](scenes/sailor_character_realistic.py) uses an anatomical MakeHuman base, photographic UV skin, natural eye materials and 23,000 hair strands. `natural_face.py` and `gentle_expression.py` shape the face and materials; `natural_hair.py` uses `fitted_hair.py` for strand/material construction. `body_proportions.py` applies the smooth body/helper deformation, while `fitted_body_clearance.py` fits the thickened blouse against complete unculled anatomy. `fitted_blouse.py`, `fitted_collar.py` and `cloth_finish.py` provide connected clothing, sharp collar rim shading, bounded drape and the pocket. `relaxed_character_details.py` supplies the pose, fitted shoes and scarf. The saved model is statically posed with editable meshes/curves, packed image textures and no animation rig. Rebuilding requires `.tools/human_reference_assets`. The MakeHuman base and bundled assets are CC0; see the [official asset license](https://github.com/makehumancommunity/makehuman/blob/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/LICENSE.md).
+
+Rebuild current source into a separate output folder, and use another folder for a face preview. Choose fresh folder names for later runs to preserve reviewed artifacts:
+
+```powershell
+.venv\Scripts\python.exe tools\build_sailor_character.py --scene scenes/sailor_character_realistic.py --output-dir outputs/sailor_character_realism_rebuild --views hero,portrait,profile,back --size 1600 --samples 128
+.venv\Scripts\python.exe tools\build_sailor_character.py --scene scenes/sailor_character_realistic.py --output-dir outputs/sailor_character_realism_preview --views portrait --size 900 --samples 24
+```
+
+`--views` selects a comma-separated subset of `hero,portrait,back,profile` and overrides `--preview`; profile renders square and covers the head. Relative paths resolve against the runner's repository root. Choose a fresh output directory for every candidate so reviewed files are never overwritten. The saved scene is editable and its textures are packed.
+
+The canonical reopened check is Blender `--background <saved.blend> --python-exit-code 1 --python tools/check_realistic_character.py`. `tools/check_garment_isolation.py` additionally compares saved candidate 4/5/6 files and checks complete unculled-body clothing clearance with negative controls. `tools/check_expression_fit.py` executes the actual production anatomy and garment blocks in four unsaved scenes, checking facial isolation and responsive torso fitting. Each tool's header gives its arguments. Candidate 6 passed these checks and the separate native six-view review; sampled geometry checks alone do not establish likeness. Historical gate failures and current results belong to the [work plan](docs/work/0_sailor-realism-goal/plan.md).
+
+For frozen proportions candidate2 replay, create a new empty directory and copy the complete `outputs/sailor_character_proportions/candidate-2/source/scenes/` and `source/tools/` trees into its `scenes/` and `tools/` directories. Copy the required `.tools/human_reference_assets` tree into that new directory as well, and verify every copied source against that candidate's `source-manifest.json`. Invoke the copied `tools/build_sailor_character.py` with the existing absolute Python interpreter, `--scene scenes/sailor_character_realistic.py`, a fresh `--output-dir`, `--views hero,portrait,profile,back --size 1600 --samples 128`, and Blender 5.2. The copied runner sets its working directory to the new root. Passing only a frozen main file to the live runner is not an isolated replay because the main file imports helpers from the runner's working directory. Inspect and hash fresh renders; source identity does not transfer prior pixel approval.
+
+## Rejected stylized sailor baseline
+
+The original version below is retained as rejected comparison evidence: the user found the face creepy, the appearance insufficiently realistic, and the skin toy-like.
+
+Haru is an original stylized adult woman, age 20, wearing a Japanese sailor-style uniform. The static posed figure has editable meshes, curves, and materials grouped by anatomy, face, hair, clothing, and studio. It has no animation rig and uses no external models, textures, or fonts.
+
+Open `outputs/sailor_character/sailor_character.blend` in Blender; the hero camera is selected. The same folder contains `hero.png`, `portrait.png`, and `back.png` for full-body, face, and rear views. Generated scenes and renders stay local under ignored `outputs/`; reusable source lives in [scenes/sailor_character.py](scenes/sailor_character.py).
+
+Rebuild from this repository in PowerShell with Blender 5.2 and Python:
+
+```powershell
+.venv\Scripts\python.exe tools\build_sailor_character.py
+.venv\Scripts\python.exe tools\build_sailor_character.py --preview --size 800 --samples 24
+```
+
+The direct headless runner defaults to 80 Cycles samples and renders a 1280 × 1600 hero, 1200 × 1200 portrait, and 880 × 1100 back view. `--preview` rebuilds the scene and renders only `hero.png`; `--no-render` saves the scene without rendering. Use `--blender 'C:\path\to\blender.exe'` for another Blender installation. The runner closes its Blender process and descendants and removes successful build logs and scratch files.
+
+## Strawberry donut
+
 A procedural strawberry-glazed donut built and rendered through the **official Blender Lab MCP** in headless Blender 5.2.
 The scene includes uneven fried dough with procedural pores, a pale proofing band, solid icing with drips, individual sugar sprinkles, a porcelain plate, linen, coffee, three cameras, and Cycles lighting.
 All geometry and materials are editable, and no external textures or models are required.

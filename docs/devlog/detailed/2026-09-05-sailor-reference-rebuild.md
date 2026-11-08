@@ -1,0 +1,13 @@
+# 2026-09-05 — Reference-led sailor rebuild, unfinished
+
+The user rejected the primitive character's face and toy-like skin and requested generated references followed by a closer Blender model. Built-in ImageGen produced a character sheet and a body turnaround of the same fictional adult woman. Exact prompts and both images remain under the ignored `outputs/sailor_character_realistic/references/` directory.
+
+The separate rebuild uses a CC0 MakeHuman anatomical mesh, fitted eyes and facial hair assets, a photographic UV albedo, millimeter-scale subsurface scattering, and limited reference-color projection on the real face mesh. Source assets and their provenance are retained under ignored `.tools/human_reference_assets/`; the saved scene packs the used image textures and remains a static model without a rig.
+
+Ignoring alpha in the fitted eye texture produced black slit-like eyes because the transparent outer shell became opaque. Connecting image alpha restored the intended visible eyes. Blender 5.2 exposes the Principled anisotropy socket as `Anisotropic`; the hair helpers now support this socket and guard the older name. The procedural ellipsoid groom failed frontal and profile checks. Fitted UV hair improved coverage, but the resulting bob still differs substantially from the reference.
+
+Five visual repair passes did not achieve the requested likeness or realism. The final 128-sample render set was inspected independently at native resolution: hero 1280 by 1600, portrait and profile 1200 by 1200, back 880 by 1100. The portrait contains a hard-edged patch beside the mouth and jagged neck edges. The profile exposes a large opening behind the neck above the collar. The hair has broad panel boundaries and a short helmet-like shape. The shoulders, sleeves, and collar remain too broad or rigid. These are unresolved defects, not cosmetic polish.
+
+The read-only structural checker covers substantial volumetric source geometry, finite coordinates, physical scale, UV texture and alpha connections, packed images, four cameras, and absence of an unintended rig. It explicitly excludes visual realism, likeness, and clothing clearance. Visible skin faces deliberately omit covered lower legs and feet, so total character height must be measured over character mesh collections; body-only face-used height measures the exposed skin subset and is not the same quantity.
+
+The original rejected baseline and the unfinished anatomical draft are both preserved. CHR-001 remains open. The next scene repair must first isolate the mouth patch and neck discontinuity, then fit hair and cloth to the reference, with new four-view review bound to the regenerated image hashes. No commit or push was made.
