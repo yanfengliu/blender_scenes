@@ -1,46 +1,50 @@
 # Reference-led sailor character realism
 
-Status: blocked
-Owner: root (implementation, integration and acceptance)
+Status: active
+Owner: root (integration, acceptance and delivery)
 Created: 2026-09-05
 Updated: 2026-11-07
 
 ## Problem and outcome
 
-The owner rejected candidate 6's face, broad upper body and sparse hair. Candidate 10 materially improves the shoulder silhouette and closes the forehead/temple gaps, with bounded softer lip and lower-cheek geometry. It still fails the natural, appealing adult appearance target: root and independent native six-view review find a mannequin-like face and broad helmet-like hair. The round is stopped at the owner-authorized ten integrated attempts, not marked aesthetically complete.
+The owner rejected the artificial face, broad upper body and sparse hair. Candidate 10 narrows the frame and restores hair coverage, but its mannequin-like face and helmet silhouette remain rejected. The previous ten-attempt round is closed; its complete plan and delivery are recoverable at commit 1ef6de511a0214234b676277dbb1f27c20b47a63 and authored review rounds 8 through 11.
+
+The owner's new instruction, "Then keep making progress", authorizes a fresh round of up to ten integrated candidates under the existing local rule. Global numbering continues at 11. The owner also requests a complete unclothed version and an explanation of clothing separation. Neither request authorizes pretending that the static character is rigged.
 
 ## Scope
 
-Root owns integration, face/frame changes, verification and delivery. garment_regression owns hair; garment_design_review supplies independent source and pixel review. Fresh shape and surface agents supplied the bounded mechanism search after two aesthetic failures. The adult age-20 identity, reference/cameras/lighting, retained bust forward projection and slim waist, garment isolation and strict evaluated mouth gate remain. Earlier rendered artifacts remain immutable. No further integrated attempt is authorized in this round.
+Retain the adult age-20 anatomy, accepted narrowed frame and bust/waist intent, camera/lighting benchmark, separate garment fitting and strict live mouth bounds. Investigate coordinated lower-orbit/cheek movement and hair paths around the actual ears. Root owns integration and delivery; round2_face_search and round2_hair_search own bounded local mechanisms, unclothed_variant owns the saved-copy exporter, and garment_design_review supplies independent review.
+
+Clothing, shoes and socks are separate objects, but covered body faces were omitted from the dressed build. The unclothed workflow restores complete canonical topology using unchanged saved coordinates and skin attributes, removes garment objects, and saves another artifact without modifying the dressed input. It does not maintain a second anatomical source. Both versions remain static, without an armature or bone-driven skinning.
 
 ## Approach
 
-The final frame map narrows the finished body and clothing together without refitting the collar outline. The face uses existing adult eyelid/nose targets, a reduced smile/width change, bounded upper/lower lip contours and a lateral lower-cheek inset that leaves all oral/ocular anchors unchanged. Hair restores frontal density and shaft thickness, uses unequal groups and continuous side curves, and removes the clamp that emptied the fringe-to-side sector. The fixed benchmark, rejected routes and measured limitations are in [design.md](design.md).
+The fixed benchmark and disqualifiers were recorded in design.md before fresh independent searches. The selected orbital response couples a small lower-lid lift with upper-cheek support after the smile and both preserved reference copies. Pure production checks preserve all oral anchors, eyeball and eyelash proxy coordinates, skin/garment references and source continuity. Evaluated eye/lash fit and rendered appearance remain separate requirements.
+
+Actual hair attribution measured a 23.39 mm broad clearance correction caused by early free fall across the ear. The new route follows the anatomical side surface below the ear before falling, with unequal lower locks. Its unsaved complete groom preserves all existing guards and reduces upper-temple extent by about 6-8 mm per side. Maximum correction rises to 34.58 mm farther back; native profile/back/oblique review must determine whether this only moves the bulge.
 
 ## Acceptance criteria
 
-- Met: visibly narrower upper-body frame with intact clothing, retained bust forward depth, protected head/waist/lower body and unchanged skin-face population.
-- Partially met: forehead and temple coverage no longer suggest the prior thinning gaps; the broad stiff hair silhouette remains unacceptable.
-- Not met: a softer, appealing natural adult face. Reduced lip bulk and lower-cheek width are bounded geometric improvements, not proof of cuteness.
-- Verification: independent exact-source review, six native views, production negative controls and saved complete-body/hair checks; repository gates and delivery must be complete before closeout.
+- Natural, appealing adult facial expression and full organic hair without a helmet silhouette, rigid lower curtain or scalp seams, judged in native canonical four, fixed opposite oblique and seeded torso views.
+- Retain coherent clothing fit, the accepted upper-frame changes and the strict mouth/eye/skin geometry requirements. Test numbers do not establish attractiveness.
+- Complete unclothed body with preserved coordinates and visible skin attributes, no garments or accessories, source input unchanged, and native fixed plus seeded-oblique inspection.
+- Independent exact-source review, required repository gates, secret/size checks, merged main and pushed delivery, and cleanup of owned processes and worktree.
 
 ## Implementation steps
 
-- Completed: candidates 7Ã¢â‚¬â€œ10 built with frozen source manifests; 7/8 received native canonical-four review and 9/10 all six views. Historical findings remain in review rounds 8Ã¢â‚¬â€œ11.
-- Completed: final lip/cheek production regressions and shape/expression checks, with no-op/former-mechanism controls. The new 516-row smile input is independently reconstructed before binding; the live 50 micrometre mouth bounds are unchanged.
-- Completed: code and review records committed as a32df7bf330106133e59e87ab81a2109f6588ec0, fast-forwarded to main and pushed. Final document binding is a docs-only closeout; task-owned worktree/branch cleanup follows it. All owned execution processes are closed.
-- Blocked: full visual acceptance remains unmet at the ten-attempt limit. CHR-001 and CHR-004 remain open. Do not reset the budget or silently relabel this draft as final.
+- Completed: fresh face/hair diagnoses and bounded proposals; current orbital production source checks and full unsaved hair guards pass.
+- Completed: candidate-10 unclothed copy, with 4,198 restored faces, unchanged 19,158 coordinates and all 36,720 original visible UV/color loops, saved-file reopening and front/back/profile review. The final launcher adds bounded timeout, failure-path input checks and a seeded oblique view; final selected export will exercise that exact source.
+- Completed: candidate 11 and all six native views; rejected for hair silhouette despite passing technical checks. The orbital proposal was excluded after its evaluated fit failure. One of ten integrated attempts is used.
+- Completed: final candidate-10 unclothed export, four native views, independent review 14 and required repository gates. Its source and documentation are ready for the separate delivery milestone.
+- Active: a distinct hair-path correction for candidate 12 and an actual-shell face proposal; these are not accepted or included in the variant milestone.
 
 ## Outcome
 
-Candidate 10 is retained as a partial editable draft under outputs/sailor_character_realism_goal/candidate-10, not accepted as a finished character. Its frozen 30-file manifest SHA256 is 07193511b7ee577e619839c013dd94bbb48b185cb365e81ae310e4f067264609. The separately maintained saved-finish checker is verification-only. Candidate 6's accepted local garment repair remains preserved, with its earlier plan bytewise under snapshots/20261107-before-naturalness/plan.md. There are no pending geometry edits and no eleventh integrated candidate.
+Appearance proposals remain local and uncommitted on codex/character-naturalness-round2 in outputs/.worktrees/character-naturalness-round2. Primary checkout changes from other work remain untouched. Evidence is intentionally retained under outputs/character-round2-20261107, worker evidence folders, outputs/unclothed-variant and the immutable numbered candidate folders. CHR-001 and the remaining face/hair portion of CHR-004 remain open.
 
-The final body shoulder sample narrows from 429.803 to 385.803 mm; the cheek sections narrow by about 4.98 mm while the central chin and complete 76-row oral contact remain exact through the lip chain. Actual source fans retain positive orientation. These numbers explain the changes and do not establish appearance. Review rounds 10 and 11 distinguish the source-safe changes from the unresolved F12 hair and F13 face findings. F14 ordering and F15 diagnostic scope are repaired without lowering acceptance. Review findings F16 and F17 hardened the reusable verifier with a pinned canonical asset, exact ornament identities and an actual empty-mesh negative; the repaired verifier passes on the saved draft.
 
-Required gates rerun: fleet 563/563, zero failures/skips; sync-canon all 35 current; official Blender Lab MCP donut build plus all three native views; Python syntax. Exact final-source pure lip/cheek checks, upper-frame/eye controls and four production garment-isolation cases pass. Final saved-scene verification passes: complete pinned canonical body, zero clothing/body overlaps, minimum blouse/collar gaps 0.620/3.751 mm above the unchanged 0.2 mm threshold, all nine exact named ornaments nonempty and clear, real empty-ornament/body-intrusion controls rejected, actual fringe/crown/temple checks passing, and unchanged saved scene. Code delivery a32df7bf330106133e59e87ab81a2109f6588ec0 is on main and origin/main. GitHub reports zero Actions runs for this exact commit; no external CI result is claimed. No delivery exception is required.
+## Current round results
 
-Raw evidence is intentionally retained under ignored outputs/character-naturalness-20261107 and the numbered candidate folders. It includes failed probes and rejected candidates because the appearance problem remains unresolved. No memory, fleet policy or unrelated scene changes are included.
+Candidate 11 used one of ten new integrated attempts. It passed the saved technical checks, but root and independent six-view review rejected ear-height shelves, an abrupt lower waist and a ballooned rear silhouette. Candidate 10 remains the usable dressed draft. The attempted orbital field was excluded before integration: evaluated witnesses showed corneal penetration increasing from 104 to 249 micrometres and a lower-lash root changing from 99 micrometres clearance to 401 micrometres embedding. All failed source bytes and measurements remain recoverable in outputs/character-round2-20261107/rejected-orbital-source and the preserved worker evidence. Neither failure is relabeled a successful appearance repair.
 
-Worker evidence originally under the isolated worktree outputs/search-shape, outputs/search-surface and outputs/hair-probe* is preserved bytewise at outputs/character-naturalness-20261107/worker-evidence. Required donut artifacts are retained separately under that evidence root.
-
-The final 30 frozen render/test sources plus the separately reviewed saved-finish checker are bound to code commit a32df7bf330106133e59e87ab81a2109f6588ec0. Comparison accounts for Git newline normalization and removal of one extra empty EOF line in hair_groom.py; all 31 Python ASTs are exact. Authored review 11 remains byte-identical (SHA256 65eb376a5ffeddcc8b098b4455617f746540877041e08a508e9c2637e15a09ba). The committed-source binding and reviewed delivery patch remain in the ignored evidence root. Unrelated primary-checkout changes were preserved, including the README tail; final cleanup outcome is recorded there in delivery-receipt.json.
+The final reviewed variant tools produced outputs/unclothed-variant/candidate-10-reviewed with the complete saved body, unchanged input and all four native inspection views. Its saved blend SHA256 is ac2dc384ed3095beb6b909f305577cb6168cdfb0b349ce60dfb8cc5dc5d50e5f. Further appearance work uses a distinct hair-path correction and actual-shell face investigation; no unverified revision replaces the usable draft.

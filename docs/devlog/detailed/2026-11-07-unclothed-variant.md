@@ -1,0 +1,11 @@
+# Complete unclothed adult variant
+
+The owner asked for an unclothed version and whether clothing is built into the body. Clothes, shoes and socks are separate objects. The dressed scene omits covered skin faces, so hiding its clothes is insufficient. `tools/export_character_variant.py` creates a separately saved copy from the existing adult-age-20 scene and restores the canonical body faces using its actual coordinates and skin UVs. It does not maintain a second anatomical model or add rigging.
+
+The reviewed candidate-10 copy restores 4,198 faces, producing 13,378 complete body faces from the same 19,158 vertices. All 36,720 original visible UV/color loops remain exact, along with supported modifiers/materials and retained face/hair/studio data. All 100 clothing objects are removed. The saved artifact reopens and verifies; the dressed input remains byte-identical. New restored loops use canonical UVs and the existing vertex skin values or the same skin-region function.
+
+The launcher requires fresh output paths, owns its headless Blender process and descendants, enforces a 900-second timeout, and checks input immutability even on failures. Three failure-path tests cover existing-output protection, timed-out process cleanup and source mutation on a failed process. Actual culling and leftover-clothing negative checks reject.
+
+The exact final exporter renders front, back, profile and a reproducible seeded full-body oblique. Root and independent review inspect the native files; no broad appearance approval transfers from the successful anatomy export. The current artifact is outputs/unclothed-variant/candidate-10-reviewed/unclothed.blend. Its four renders and verification.json are retained beside it. Candidate 11's hair experiment remains rejected; the matching dressed source is candidate 10.
+
+Required repository gates pass: fleet 563/563 with no skips, all 35 instruction blocks current, Python syntax, and official Blender Lab MCP donut build with all three native views. The initial sandboxed fleet run failed because Git Bash could not create Windows named objects; the unchanged suite passed with normal Windows permissions. No gate was waived. Independent source and integration records are review rounds 12 and 14 in docs/work/0_sailor-realism-goal.
