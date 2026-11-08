@@ -1,5 +1,7 @@
 # Devlog
 
+2026-11-08 - **Relaxed the character's frowning eyebrows.** Candidate 27 replaces folded inner hooks with UV-derived brow ribbons; six native views and independent review accept the local expression improvement. Saved and production geometry match, with fold and skin-clearance regressions covered. Face and hair realism remain open. See detailed/2026-11-08-relaxed-brows.md.
+
 2026-11-07 - **Refined the complete unclothed adult anatomy.** Candidate 14 adds a fuller chest and clearer nipple/areola and external vulvar detail on continuous skin; six native views and saved geometry/material checks pass. Rejected face/hair experiments remain excluded. See detailed/2026-11-07-anatomy-refinement.md.
 
 2026-11-07 - **Added a complete unclothed adult variant.** The saved-copy exporter restores canonical skin faces and preserves the dressed input, coordinates and visible skin attributes; saved reopening, four native views and launcher failure tests pass. Both versions remain static. See detailed/2026-11-07-unclothed-variant.md.

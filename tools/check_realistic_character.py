@@ -33,6 +33,7 @@ from mathutils.bvhtree import BVHTree
 
 sys.path.insert(0,str(Path(__file__).resolve().parent))
 from verify_reference_smile import verify_reference_smile
+from check_relaxed_brows import validate_brows
 
 SMILE_INPUT_SHA256='52d36d7c9db5b4750807bb97dec4c0270f7cc4b3aa2296407b36c00194a9ab2e'
 
@@ -537,6 +538,7 @@ def validate_scene():
             'restore the photographic UV albedo texture and its color connection.')
 
     ocular_layers = check_ocular_layers(scene.objects.get('Eyes'))
+    relaxed_brows = validate_brows(scene.objects['Eyebrows'], body)
     for object_name in ('Eyelashes', 'Eyebrows'):
         obj = scene.objects.get(object_name)
         require(obj is not None and len(obj.material_slots) > 0,
@@ -573,6 +575,7 @@ def validate_scene():
         'cameras': list(CAMERA_VIEWS),
         'geometry_regressions': geometry_regressions,
         'ocular_layers': ocular_layers,
+        'relaxed_brows': relaxed_brows,
         'reference_smile': smile_gate,
         'visual_acceptance': 'Not certified; CHR-001 requires four-view reference comparison.',
     }

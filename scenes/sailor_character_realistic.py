@@ -17,7 +17,8 @@ ROOT=Path.cwd()
 sys.path.insert(0,str(ROOT/'tools'));sys.path.insert(0,str(ROOT/'scenes'))
 from prepare_human_base import load_body,fit_proxy,to_blender,group_center,ASSETS,DEFAULT_TARGETS
 from natural_hair import build_hair
-from natural_face import build_skin,shape_expression,attach_skin_regions,fit_fuller_brows,soften_iris_color
+from natural_face import build_skin,shape_expression,attach_skin_regions,soften_iris_color
+from relaxed_brows import fit_uv_brows
 from gentle_expression import apply_gentle_expression
 from perioral_shape import apply_perioral_shape
 from lower_cheek import apply_lower_cheek_inset
@@ -291,8 +292,12 @@ for name,path,mat,sub in [('Eyes',ASSETS/'high-poly.mhclo',eye_mat,2),
         ('Eyebrows',ASSETS/'eyebrows/eyebrow007/eyebrow007.mhclo',eyebrow_mat,1),
         ('Eyelashes',ASSETS/'eyelashes/eyelashes02/eyelashes02.mhclo',lash_mat,1)]:
     data=fit_proxy(path,native['vertices']);coords=to_blender(data['vertices'],native['ground_y'],SCALE)
-    if name=='Eyebrows':coords=fit_fuller_brows(coords,body)
     ob=mesh(name,coords,data['faces'],mat,sub,data['uvs'],data['face_uvs'])
+    if name=='Eyebrows':
+        relaxed,_=fit_uv_brows(ob,body)
+        for vertex,point in zip(ob.data.vertices,relaxed):vertex.co=point
+        ob.data.update()
+        bpy.context.view_layer.update()
     if name=='Eyes':assign_ocular_layers(ob,ASSETS/'high-poly.obj')
     if name in ('Eyebrows','Eyelashes'):
         # Match the source alpha-hair materials: no cast shadow or specular.
