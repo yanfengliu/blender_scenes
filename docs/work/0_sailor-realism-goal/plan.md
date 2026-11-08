@@ -5,7 +5,7 @@ Owner: root (integration, acceptance and delivery)
 Created: 2026-09-05
 Updated: 2026-11-08
 
-Current status: candidate 27 is independently accepted as a local brow improvement and reproduces exactly through the editable production call. All runtime gates pass; code delivery is ready. Round 3 has used seven of ten integrated attempts; three remain, next number 28. The full face and hair remain below the requested naturalness.
+Current status: accepted relaxed brows are merged and pushed as 91d2132 with all gates passing and no exception, and accepted in the refined unclothed copy. Candidate 29 failed after 6,524 paths on an 80.16-degree final capture corner; a bounded terminal-region correction is in preparation. Round 3 has used nine of ten integrated attempts; one remains, next 30. Full face and hair naturalness remains open.
 
 ## Problem and outcome
 
@@ -200,3 +200,17 @@ The halfspace ear envelope and distance-limited terminal approach pass all eleve
 ## Accepted brow delivery gates
 
 The exact production source has independent review 49 with no blockers. Fleet passes 563/563 with zero failures/skips using normal Windows process access; the initial sandbox run failed when Git Bash named-object creation was denied, and no test was changed or waived. Instruction sync reports all 35 repositories current. All 41 Python files parse. The official Blender Lab MCP build and native hero/overhead/detail views pass on the GPU; its owned process tree closes. The complete saved character check and actual production brow replay both pass. Raw gate evidence is in `outputs/character-round3-20261108/brow-production-verification/required-gates.json`. The reviewed dressed artifact is also available as `outputs/sailor_character_realism_goal/candidate-27/sailor_character.blend`, byte-identical to the accepted candidate.
+
+## Candidate 28 full-groom result
+
+Review 50 accepted the exact full source after checking its complete physical support, anatomical roots, actual shaft radii, all brow triangles and save/reopen bindings. The full run stopped after 2,391 paths when the integration budget was exhausted. The result, failing specification and all recorded points are retained; no paths are dropped and no budget or physical constraint is relaxed. Independent and author diagnosis precedes the next integrated attempt. The accepted brow geometry is also being transferred unchanged to the earlier refined unclothed copy, with full anatomy/state preservation and a new native portrait check. This consistency copy introduces no new appearance design and is not another integrated candidate.
+
+## Accepted unclothed brow consistency copy
+
+Review 53 accepts the exact candidate-27 brow coordinates transferred to the previous refined adult anatomy. Complete body geometry, attributes, UVs and all retained material graphs/settings are unchanged. The initial all-material equality check exposed one obsolete original skin material that Blender drops during saving. Native proof establishes zero users, no fake user and no object slots; only that identified unused ID is absent, with all ten retained material records exact. A separate proof-script comparison initially confused native tuples with their JSON arrays; complete canonical-record comparison fixes that instrumentation error without dropping fields. Both failures remain retained. The saved `.blend` bytes are unchanged by later checks and rendering, and root plus independent review accept the native portrait. Delivery: `outputs/unclothed-variant/relaxed-brows/unclothed.blend`, SHA-256 `ea9e769d3b474d92f26ed7af11f56d9e35e2760ded4d7a6418740c3d938f9416`.
+
+The corrected hair endpoint planner includes every mandatory physical and ear-construction reserve. Native twelve-path verification passes, leaving all prior eleven actual paths exactly unchanged. The formerly failing path projects only its invalid target by about 3.06 mm and finishes within unchanged path, turn, root and clearance limits. Reviews 52 and 54 bind the bounded repair and complete candidate-29 source. The full attempt is counted before launch; one integrated attempt remains.
+
+## Candidate 29 sharp terminal capture
+
+The full run preserved all earlier repaired paths and reached 6,524 completed strands, then correctly failed the unchanged 75-degree lower-hair turn guard. The sole violating corner is the final certified 1.917 mm center-capture chord at vertex 202, with an 80.156-degree turn; all previous turns stay below 8.836 degrees. The goal and its 0.254 mm arrival sphere are valid. A pure geometric witness shows that a different one-chord arrival inside the same sphere can satisfy the turn bound; this is not yet a native or full-groom acceptance. The proposed correction uses the analytic intersection of the permitted heading cone with the existing sphere and preserves valid original captures. All fresh physical, endpoint, length and stored-float checks remain mandatory. Source, points, actual radii and terminal plans remain under `outputs/character-round3-20261108/candidate29-source`. One full integrated attempt remains, number 30.

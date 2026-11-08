@@ -1,0 +1,76 @@
+# Review 53: implementation
+
+## Target
+
+Accepted brow transfer to the existing refined adult unclothed model.
+
+## Reviewers and coverage
+
+Independent Codex reviewer, Astra xhigh. Root owns native execution, acceptance and delivery.
+
+## Reports
+
+Complete authored report, SHA-256 `584519397c479f0d286e9375b5c4ede3e97ebd93c294c545c589e1659c11c44e`.
+
+# Accepted brow transfer to anatomy 14 — source review
+
+**No blocking source finding in the exact pinned saved-copy transfer.** This is reuse of candidate 27's accepted brow coordinates on the retained unclothed adult anatomy variant, with no new brow design or anatomy modeling. Execution, successful reopening and native portrait inspection remain pending at this review.
+
+Reviewed driver: `unclothed-brows/build.py`, SHA-256 `3d2596343f2a8b79565c4f09c790426ec6a07baba1045c5f33db3fc065d115a1`. Reviewed manifest: `unclothed-brows/source-manifest.json`, SHA-256 `4956dd4686c80e9b747425cd6961078b10b95daa03be098ea5f6f1a4a4305b5d`. I independently recomputed all 45 entries: 41 worktree scene/tool Python files, this driver, the actual retained-state helper, hair fingerprint helper, and candidate-27 build-result JSON. Every hash matches. The driver checks the manifest before helper imports and after rendering and records the bindings in the final receipt. These paths are relative to `outputs/character-round3-20261108` unless otherwise identified.
+
+The input is explicitly pinned to `outputs/unclothed-variant/anatomy-candidate-14/unclothed.blend`, SHA-256 `60982ddc836faaa6316204104ffd6d2c9e5d5cdafa392991e14e4961b72aa332`; I independently confirmed the current file hash. The proposal comes from candidate 27's `build-result.json`, SHA-256 `f26d7afca99032bf04f6c0fa376c1db1a6975a5d850d389d317bb79962219b2c`. I verified all 124 proposed points are finite triples and independently packed them as float32: the resulting coordinate SHA-256 is exactly `fdaf6f8106f99f88086eeafe9e6d5c798d9c19d774ec4aa709ef5e93d946db28`, the maintained accepted-shape pin. The script checks that same pin after transfer and reopening. It copies coordinates directly; it does not rerun fitting against a different body or rebuild the asset.
+
+`retained()` temporarily restores only the input brow coordinates while computing the previously reviewed fixed-scene fingerprint, then restores the current coordinates in `finally`. Adding `mesh_fingerprint(body)` closes the intentional body-position exclusion in `fixed_state`: the comparison includes anatomy coordinates, ordered topology, UVs, color buffers, surface settings, materials and transforms. Existing fixed-state coverage includes brow topology/UV/material/modifier state, other objects, hair, camera, lights, collections, image bindings and render settings. Before saving, after reopening, and after portrait rendering, the driver requires this combined retained state to match the input. It saves a separate file, refuses an existing output blend, and verifies that the original input bytes remain unchanged.
+
+The transferred brows run the same maintained render-level projected-disk, positive exterior-offset and continuous whole-triangle/body-clearance checks previously reviewed in `brow-production.md`, now against anatomy 14's actual body surface. Folded, inner-hook, buried and floating negative controls run before saving and restore their mutations. After reopening, exact brow coordinates plus exact retained source geometry, modifiers and body fingerprint establish the same geometry inputs; the script does not claim a second independent physical evaluation after reopening.
+
+The portrait uses the existing `Camera_portrait`, 1200 × 1200 native output, 128 Cycles samples and an asserted OptiX GPU. It saves the blend before changing temporary portrait settings. Camera, render, image and Cycles scene settings restore in `finally`, followed by the retained-state assertion and a check that the saved blend bytes are unchanged. Process-local device selection and backup preference changes are not saved to user preferences by this script. The root remains responsible for owning and closing the headless Blender process and inspecting the final native portrait.
+
+I parsed the final driver successfully and reviewed the imported retained-state, body fingerprint and brow-validation code. No Blender, GPU, render, browser or GUI process was launched by this reviewer. The only requested source adjustment was adding exact dependency/receipt binding; it is present in the final hashes above. This approval covers the localized transfer source. It does not certify new hair quality, whole-character visual completion, or an unobserved runtime result.
+
+## Failed saved-copy verification — retained, not accepted
+
+The exact reviewed driver subsequently failed at line 38, its first retained-state/accepted-brow assertion after reopening the saved copy. The process receipt records PID 4480, exit 1, tree closed, 94.7105919 seconds, and the same reviewed driver SHA. Before-save validation and retained-state comparison had passed because execution reached saving and reopening. No final result receipt or portrait was produced. The original anatomy-14 file remains unchanged; the failed derivative is preserved with SHA-256 `ea9e769d3b474d92f26ed7af11f56d9e35e2760ded4d7a6418740c3d938f9416`. `build.log` is `8dfda692a4468b6c81141c41af5d926450399200b95739bfb0dc3f7f369ccec5`; the process receipt is `4e265de4c20c9084e4bd7af02363dce9aa9f8234450aa4d7f1d7e74876ea14b8`. The derivative is **not accepted**. The cause is not established; the logged thumbnail-write error alone does not explain or excuse a retained-state mismatch.
+
+A separate bounded capture-only diagnostic is prepared at `unclothed-brows-diagnosis/capture.py`, SHA-256 `089bf30e24916837ecc7d6d7a9cd809bed828f81fb480fc1a4f34efadf8d565e`. It binds the original, failed copy and transfer manifest, checks every source pin, and derives a capture function from the exact `fixed_state` AST by removing only its final `digest(...)` wrapper. An AST roundtrip assertion verifies that restoring that wrapper reproduces the original function; all nested fingerprint calls remain unchanged. Both file captures temporarily restore original brow coordinates, restore their native coordinates in `finally`, preserve exact body fingerprints, and separately report the failed copy's native accepted-brow hash. It writes complete original/saved final-digest inputs and compares top categories; any nested opaque-hash mismatch will receive a targeted follow-up rather than a generic additional audit. It does not save, render, change an acceptance rule or assume unused metadata caused the failure. Static syntax and source bindings pass; there are exactly two file-open calls and no save/render calls. Only the root may launch it; runtime capture is still pending.
+
+## Captured mismatch and narrow material proof
+
+The capture completed with exit 0 and a closed process tree: PID 41168, 135.8432088 seconds. Its result SHA-256 is `3a668ec31fd2edacbb402e2db1e60c6f43d84b0fdcd1b06344deb0afc7a684ab`; the original and saved raw snapshots are respectively `cf316b5a7d21485cc1a1497570d0533874ad51c63d33ab17f7c7a672b4347548` and `063085f1f6c272f2c62066f651c7313d7b2d6eec818a525c47d917bc0d3eb56e`. Only `all_materials` and `material_extra` differ. Every body fingerprint field is exact, comparison brow positions are exact, and the saved native brow hash equals the accepted candidate-27 pin. The original and saved files remained byte-identical to their frozen inputs during capture.
+
+The root's small extraction `material-extra-diff.json`, SHA-256 `0996bd1f9383e9a61d13513eed138c8ebdd14f509239729951d1a8f15d819ca6`, contains 11 original materials and 10 saved materials. The sole missing name is `Skin / continuous photographed albedo and local surface response`; no material is added and no retained extra record changes. I read that extraction and independently verified the body fingerprint equality directly from small memory-mapped raw fields. This isolates the candidate explanation but does not yet prove that the missing material was unused or that all retained shader graph records are exact.
+
+The narrowly scoped follow-up is `unclothed-brows-diagnosis/verify_orphan_render.py`, SHA-256 `9d1f68c4ee6abe943e76d99f5057fa2b1d1ca41797cac8f9226c5006125cc33d`. It binds all source/raw/input hashes, opens the original and saved files without saving, and requires the exact named original material to have zero users, no fake user and no object material slots. It exposes the complete existing `materials_snapshot` record through an AST transformation, checks each native aggregate against its previously captured hash, and requires original records excluding only that material to equal every saved record. It also rechecks material extras, exact body fingerprints and brow hashes against the capture. Complete small material records and the orphan evidence are preserved. There is no blanket unused-material exclusion or geometry relaxation.
+
+Only after those checks pass does this follow-up render the existing camera's 1200-pixel portrait with OptiX, restore scene camera/render/image/Cycles settings in `finally`, verify body/brow/material state again, and verify both saved files and all evidence/source bytes remain unchanged. Syntax and small raw-field extraction were checked without Blender; the script has no save calls and does not repeat the large scene capture. The native orphan proof and portrait remain pending at this source-review addendum. The failed original saved-copy assertion remains recorded rather than being rewritten as a pass.
+
+## Orphan-proof instrumentation failure and exact correction
+
+Version 1 of the proof script failed on the original anatomy-14 file at line 100, before orphan classification, saved-file inspection or rendering. Its native `mesh_fingerprint` contains tuples in fields such as attributes, UV state and material slots; the captured JSON represents these as lists. My direct Python equality comparison therefore rejected an equivalent record. This is a reviewer-authored instrumentation error, not evidence of an anatomy change. The log and receipt preserve PID 6704, exit 1, closed process tree and 11.4806816 seconds, with unchanged version-1 SHA `9d1f68c4ee6abe943e76d99f5057fa2b1d1ca41797cac8f9226c5006125cc33d`. No native orphan or visual acceptance is inferred from this failed run.
+
+The root preserved version 1 and prepared `verify_orphan_render_v2.py`, SHA-256 `ea7a4fb7d18c76ff1449f8e9ab86be477b9b16cb61176a46115e4f7f9eaf9eca`. I reviewed its exact diff: the only behavioral change compares `variant.digest(actual_body)` with `variant.digest(captured_body)` using the existing canonical JSON function. All 19 complete fingerprint fields remain present; there is no geometry-field omission, tolerance or material exemption. A pure replay using the actual captured fingerprint reproduces the tuple/list direct inequality and canonical equality. Controls changing the coordinate, loop-vertex or polygon-material hashes still reject. Syntax passes. This exact correction is approved for the root-owned run; the native orphan proof and portrait are still pending.
+
+## Final local transfer acceptance
+
+**Accept this saved copy as the localized transfer of candidate 27's accepted brows onto the unchanged anatomy-14 variant.** Version 2 completed with PID 30296, exit 0, closed process tree and 29.9691811 seconds. Its process receipt SHA-256 is `a54ce0430be997ee82472532e9eceef130216c76f56a6bb295b05857f04aac43`. I read the actual log, `material-proof.json` (SHA-256 `13a609c8bb2c5dc20fadb371c282f44dab6ad27c163bc376d154d1021a8a970f`) and complete `material-records.json` (SHA-256 `7cb4ec0443ce1ee85be3c26707e07acc37bb9fe488de1ccbdd789baeab53b4dc`). I independently compared the records: all ten saved material records equal the original records after removing only the identified material, with no other removal, addition or graph-record change.
+
+The native evidence establishes the missing `Skin / continuous photographed albedo and local surface response` material had exactly zero users, no fake user and no object material slots in the original file. The live `Skin / adult anatomy with localized pigmentation` material remains, with its complete retained graph/settings/link record and extra state unchanged. This precisely classifies the original save mismatch as cleanup of that one unused material ID. It is not a general material exemption, geometry tolerance or reversal of either recorded failure. Exact body fingerprints, original-brow-restored nonmaterial scene state and the accepted saved brow coordinates remain established by the bound capture and native proof. The proof/render did not resave the file. I independently rehashed the accepted derivative (`ea9e769d3b474d92f26ed7af11f56d9e35e2760ded4d7a6418740c3d938f9416`) and original anatomy-14 input (`60982ddc836faaa6316204104ffd6d2c9e5d5cdafa392991e14e4961b72aa332`); both remain unchanged.
+
+I viewed `unclothed-brows/portrait.png` at its original 1200 × 1200 resolution, SHA-256 `bdd71c1083bcb9f731be6dae1c915d5313c2e36a11c09b69d913621ea74c181f`, and compared the original-resolution candidate-27 portrait, SHA-256 `fccce2ac20a3c8a8c8531e35dd822cc943128db83771a6d8849a004ab7d2b00f`. The transfer visibly preserves the same shallow brow arches and gentler inner-brow direction. I see no new dark crossing, floating brow edge, forehead discontinuity, exaggerated inner lift, or introduced face/head artifact in this portrait. The face, eyelids, mouth and head silhouette read consistently with the accepted dressed result. This is acceptance of the same local brow correction, not a new claim of face realism or redesigned anatomy.
+
+The headless log includes a nonfatal Blender `context.area.tag_redraw()` callback error while restoring Cycles properties. Execution continued through the explicit complete settings-equality checks, body/brow/material checks, source/file hash checks and final receipt, then exited 0. The diagnostic did not save those temporary render settings. Its warnings are retained in the log rather than hidden; there is no observed saved-state defect from that callback. I launched no Blender or rendering process myself.
+
+Only this local transfer is accepted. The native evidence here is one portrait, supported by exact saved geometry/state and the already accepted candidate-27 shape. It does not add full-body or six-view visual coverage, resolve inherited hair realism/F21, or claim the entire character is complete.
+
+
+## Findings and disposition
+
+Accept the local transfer. Root and independent review inspected the native portrait. Complete body and retained scene state are exact; only the identified unused old skin material is discarded by normal saving. The two earlier failures remain documented and are resolved without weakening geometry checks.
+
+## Verification
+
+Exact sources, native receipts and original failure evidence are retained under `outputs/character-round3-20261108`. Reviewed unclothed delivery files are also retained under `outputs/unclothed-variant/relaxed-brows`.
+
+## Round outcome
+
+Nine integrated attempts used, one remains, next 30. Brows are accepted in both delivered variants; whole face and hair realism remains open.
