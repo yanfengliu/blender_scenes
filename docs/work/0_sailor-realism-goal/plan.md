@@ -5,7 +5,7 @@ Owner: root (integration, acceptance and delivery)
 Created: 2026-09-05
 Updated: 2026-11-08
 
-Current status: accepted relaxed brows are merged and pushed as 91d2132 with all gates passing and no exception, and accepted in the refined unclothed copy. Candidate 29 failed after 6,524 paths on an 80.16-degree final capture corner; a bounded terminal-region correction is in preparation. Round 3 has used nine of ten integrated attempts; one remains, next 30. Full face and hair naturalness remains open.
+Current status: round 3 is closed at its ten-attempt authorization limit. Accepted relaxed brows are merged and pushed as 91d2132 and delivered in both dressed and refined unclothed versions. Candidate 30 failed after 2,350 hair paths; no new hair is accepted. All accepted-runtime gates pass without exception. The broader face/hair goal remains open, with no further trial authorized in this round.
 
 ## Problem and outcome
 
@@ -214,3 +214,21 @@ The corrected hair endpoint planner includes every mandatory physical and ear-co
 ## Candidate 29 sharp terminal capture
 
 The full run preserved all earlier repaired paths and reached 6,524 completed strands, then correctly failed the unchanged 75-degree lower-hair turn guard. The sole violating corner is the final certified 1.917 mm center-capture chord at vertex 202, with an 80.156-degree turn; all previous turns stay below 8.836 degrees. The goal and its 0.254 mm arrival sphere are valid. A pure geometric witness shows that a different one-chord arrival inside the same sphere can satisfy the turn bound; this is not yet a native or full-groom acceptance. The proposed correction uses the analytic intersection of the permitted heading cone with the existing sphere and preserves valid original captures. All fresh physical, endpoint, length and stored-float checks remain mandatory. Source, points, actual radii and terminal plans remain under `outputs/character-round3-20261108/candidate29-source`. One full integrated attempt remains, number 30.
+
+## Final authorized candidate 30
+
+Reviews 56 and 57 accept the exact bounded correction and final integration for trial. The revised terminal capture analytically intersects the original arrival sphere with the permitted heading cone; it changes no target, radius, physical margin, path length or turn limit. Actual native replay preserves all twelve earlier paths and the failed thirteenth path through point 202 exactly, then replaces only its final endpoint with a strict interior arrival whose measured turn is 73.777 degrees. All thirteen paths pass the existing body, ear, head, brow and budget checks. Candidate 30 is counted as the tenth full attempt before launch, and no further full attempt is authorized in this round.
+
+## Final round 3 outcome
+
+All ten substantive integrated attempts (global 21 through 30) are accounted for before dispatch. Candidate 30 stopped after 2,350 completed paths because a fringe strand exhausted its 900-step budget; it saved no model and produced no render. Its owned Blender PID 48164 exited with failure and its process tree closed after 40.9974 seconds. Input, source and production bindings remain exact. No candidate 31 is launched or prepared as another repair. The final failure and every stored point remain retained for future diagnosis; the current authorization is exhausted under the owner's ten-attempt rule.
+
+The accepted change in this round is candidate 27's relaxed brow geometry. Runtime commit `91d2132f7e6700099644ee283c583eccfdea2055` is merged and pushed; fleet 563/563, instruction sync, Python syntax, saved-model and production-coordinate checks, official Blender Lab MCP and native views all pass without a gate exception. Independent source and visual reviews accept the local improvement. The dressed model is `outputs/sailor_character_realism_goal/candidate-27/sailor_character.blend`; the matching refined unclothed model is `outputs/unclothed-variant/relaxed-brows/unclothed.blend`. Both remain editable static models without a bone/skin rig. The original anatomy files and unrelated primary checkout changes are preserved.
+
+Full face/hair naturalness is not accepted. Hair source experiments are excluded from production. Reviews and raw exact-source/native evidence remain in `outputs/character-round3-20261108`; 356 runtime and earlier worktree evidence files were copied with hashes into `final-worktree-evidence` before cleanup. No work remains only on an unmerged code branch. A future authorized round should use the recorded failures and reconsider the full grooming strategy rather than silently extend this exhausted round.
+
+## Final independent disposition and scope correction
+
+Review 58 confirms that candidate 30's failure is a scope regression: the new capture-angle predicate also constrained upper-fringe paths, whereas the previous adaptive turn check applied only below its lower-hair ceiling. The entire failed path is above that ceiling. Stored-data/source replay finds an earlier original center capture that passes the old bounds and old adaptive-shape function, while the newly imposed global heading cone cannot intersect the tiny target sphere there. This is not evidence that the physical path is impossible. The thirteen bounded tests and preceding source review missed this domain distinction; their positive results do not override the full-run failure. No repair is made after exhausting authorization.
+
+The final active runtime remains the reviewed brow commit; all new hair source is excluded. The ten-attempt rule is the owner's instruction in `docs/policies/local-rules.md`, not a request for a gate exception. Round3 is stopped with the broader face/hair goal explicitly unfinished.

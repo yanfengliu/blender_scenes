@@ -9,3 +9,7 @@ Delivery verification and exact revision review are recorded in the work plan an
 Run the isolated regression in owned background Blender with `--python tools/check_relaxed_brows.py` on the saved scene, or add `-- --production` to exercise the actual main-scene anatomy/eye prefix. The full reopened checker also includes the brow gate.
 
 Required gates pass: fleet 563/563 with no failures/skips, instruction sync 35 current, Python AST 41 files, official Blender Lab MCP build and all three native donut views. The first restricted test run failed on Windows Git Bash process access; the unchanged full suite passes with normal process permissions. No exception is used. Independent production review 49 reports no blockers.
+
+The same accepted brows are also delivered in the earlier refined unclothed model. Native saved-copy verification preserves all anatomy and all ten retained materials; the sole save difference is a proven zero-user obsolete skin material. Root and independent review accept the 1200-pixel portrait. Both original and updated files remain intact.
+
+Round 3 closes at the owner's ten-attempt limit. Final hair candidate 30 stops before saving on a 900-step strand budget, and all new hair experiments remain excluded from production. Face/hair naturalness remains open; the accepted deliverable is the local brow improvement.
